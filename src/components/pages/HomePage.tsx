@@ -1,8 +1,76 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { useModal } from '@/components/layout/AppShell'
+
+/** Parse stat value like "2,600+", "+6000", "98%", "40+" into number + suffix */
+function parseStatValue(value: string): { num: number; suffix: string } {
+  const cleaned = value.replace(/,/g, '').trim()
+  const hasLeadingPlus = cleaned.startsWith('+')
+  const toParse = hasLeadingPlus ? cleaned.slice(1) : cleaned
+  const match = toParse.match(/^([\d.]+)(.*)$/)
+  if (!match) return { num: 0, suffix: value }
+  const num = parseFloat(match[1]) || 0
+  const suffix = hasLeadingPlus ? '+' + (match[2] || '') : (match[2] || '')
+  return { num, suffix }
+}
+
+function formatNum(n: number): string {
+  if (n >= 1000) return Math.round(n).toLocaleString()
+  return Math.round(n).toString()
+}
+
+const DURATION_MS = 1800
+const TICK_MS = 32
+
+function CountUpNum({ value }: { value: string }) {
+  const { num, suffix } = parseStatValue(value)
+  const [display, setDisplay] = useState(num <= 0 ? value : `0${suffix}`)
+  const [started, setStarted] = useState(false)
+  const ref = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const el = ref.current
+    if (!el) return
+    const parsed = parseStatValue(value)
+    if (parsed.num <= 0) {
+      setDisplay(value)
+      return
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0]?.isIntersecting && !started) setStarted(true)
+      },
+      { threshold: 0.2 }
+    )
+    observer.observe(el)
+    return () => observer.disconnect()
+  }, [value, started])
+
+  useEffect(() => {
+    if (!started) return
+    const { num, suffix } = parseStatValue(value)
+    if (num <= 0) return
+
+    const start = performance.now()
+    let rafId: number
+
+    const tick = (now: number) => {
+      const elapsed = now - start
+      const t = Math.min(elapsed / DURATION_MS, 1)
+      const eased = 1 - Math.pow(1 - t, 2.5)
+      const current = eased * num
+      setDisplay(formatNum(current) + (suffix || ''))
+      if (t < 1) rafId = requestAnimationFrame(tick)
+    }
+    rafId = requestAnimationFrame(tick)
+    return () => cancelAnimationFrame(rafId)
+  }, [started, value])
+
+  return <span ref={ref}>{display}</span>
+}
 
 interface SchoolStat {
   id: number
@@ -150,7 +218,7 @@ export default function HomePage() {
       <div className="hero">
         <div className="hero-pattern" />
         <div className="hero-content">
-          <div>
+          <div className="hero-text-block">
             <div className="hero-badge">🎓 Est. 1982 — Over 40 Years of Excellence</div>
             <h1>A Journey to<br /><em>Excellence</em><br />Starts Here</h1>
             <p className="hero-sub">
@@ -163,26 +231,8 @@ export default function HomePage() {
             </div>
           </div>
           <div className="hero-visual">
-            <div
-              style={{
-                width: '100%',
-                maxWidth: 560,
-                borderRadius: 16,
-                overflow: 'hidden',
-                boxShadow: '0 18px 50px rgba(0,0,0,0.35)',
-              }}
-            >
-              <video
-                src="/videos/video.MP4"
-                controls
-                playsInline
-                style={{
-                  width: '100%',
-                  height: '100%',
-                  display: 'block',
-                  objectFit: 'cover',
-                }}
-              />
+            <div className="hero-video-wrap">
+              <video src="/videos/video.mp4" controls playsInline />
             </div>
           </div>
 
@@ -192,7 +242,7 @@ export default function HomePage() {
               {stats.map((stat) => (
                 <div key={stat.id} className="stat-card">
                   <div className="num">
-                    {stat.value}
+                    <CountUpNum value={stat.value} />
                   </div>
                   <div className="label">{stat.label}</div>
                 </div>
