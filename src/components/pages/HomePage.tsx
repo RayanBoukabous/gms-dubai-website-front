@@ -232,7 +232,7 @@ export default function HomePage() {
           </div>
           <div className="hero-visual">
             <div className="hero-video-wrap">
-              <video src="/videos/video.mp4" controls playsInline />
+              <video src="/videos/video.MP4" controls playsInline />
             </div>
           </div>
 
