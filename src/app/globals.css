@@ -1364,3 +1364,374 @@ footer {
   .admission-form-wrap { padding: 20px 16px; }
   .modal { padding: 24px 20px; }
 }
+
+/* ===== ENROLMENT (Online Registration) ===== */
+.enrolment-filebox {
+  border: 1.5px dashed rgba(74,125,181,0.38);
+  background: rgba(74,125,181,0.05);
+  border-radius: 12px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+}
+
+.enrolment-filebox-empty {
+  width: 100%;
+  min-height: 130px;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.6);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.enrolment-filebox-title {
+  font-weight: 800;
+  color: var(--navy);
+  font-size: 14px;
+}
+
+.enrolment-filebox-sub {
+  color: rgba(26,21,16,0.55);
+  font-size: 12px;
+}
+
+.enrolment-file-input {
+  width: 100%;
+  border: none !important;
+  background: transparent !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
+  font-size: 14px;
+}
+
+.enrolment-face-preview {
+  width: 160px;
+  height: 160px;
+  object-fit: cover;
+  border-radius: 12px;
+  border: 1px solid rgba(74,125,181,0.25);
+  background: white;
+}
+
+.enrolment-result-wrap {
+  margin-top: 28px;
+}
+
+.enrolment-result-grid {
+  display: grid;
+  grid-template-columns: 0.95fr 1.05fr;
+  gap: 16px;
+}
+
+.enrolment-result-card {
+  background: white;
+  border-radius: 14px;
+  padding: 16px;
+  border: 1px solid rgba(13,27,62,0.10);
+  box-shadow: 0 8px 26px rgba(13,27,62,0.06);
+}
+
+.enrolment-result-card-title {
+  font-weight: 900;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  font-size: 12px;
+  color: var(--navy);
+  margin-bottom: 10px;
+}
+
+.enrolment-muted {
+  color: rgba(26,21,16,0.55);
+  font-size: 13px;
+  text-align: center;
+  padding: 12px 0;
+}
+
+.enrolment-qr-img {
+  display: block;
+  width: 190px;
+  max-width: 100%;
+  height: auto;
+  margin: 0 auto;
+  border-radius: 10px;
+  border: 1px solid rgba(13,27,62,0.10);
+  background: white;
+}
+
+.enrolment-qr-shortid {
+  margin-top: 12px;
+  text-align: center;
+}
+
+.enrolment-qr-shortid-label {
+  display: block;
+  font-size: 11px;
+  color: rgba(26,21,16,0.55);
+  font-weight: 700;
+  margin-bottom: 6px;
+  letter-spacing: 0.3px;
+}
+
+.enrolment-qr-shortid-code {
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 900;
+  font-size: 12px;
+  color: var(--navy);
+  background: rgba(74,125,181,0.08);
+  border: 1px solid rgba(74,125,181,0.22);
+  border-radius: 8px;
+  padding: 8px 10px;
+  display: inline-block;
+  word-break: break-word;
+}
+
+.enrolment-id-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 10px;
+  background: rgba(74,125,181,0.04);
+  border-radius: 10px;
+  padding: 10px 12px;
+  margin-bottom: 10px;
+}
+
+.enrolment-id-label {
+  font-size: 11px;
+  font-weight: 900;
+  color: rgba(26,21,16,0.55);
+  text-transform: uppercase;
+  letter-spacing: 0.35px;
+}
+
+.enrolment-id-value {
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 900;
+  font-size: 12px;
+  color: var(--navy);
+  text-align: right;
+  word-break: break-word;
+}
+
+.enrolment-face-thumb {
+  margin-top: 12px;
+  display: flex;
+  justify-content: center;
+}
+
+.enrolment-face-thumb img {
+  width: 140px;
+  height: 140px;
+  object-fit: cover;
+  border-radius: 12px;
+  border: 1px solid rgba(13,27,62,0.10);
+  background: white;
+}
+
+.enrolment-actions {
+  margin-top: 16px;
+  display: flex;
+  justify-content: center;
+}
+
+.btn-outline-blue {
+  background: transparent;
+  color: var(--navy);
+  border: 2px solid rgba(74,125,181,0.9);
+  padding: 12px 22px;
+  border-radius: 8px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: 'DM Sans', sans-serif;
+}
+
+.btn-outline-blue:hover {
+  border-color: var(--navy-light);
+  background: rgba(74,125,181,0.06);
+  color: var(--navy-light);
+}
+
+.enrolment-print {
+  display: none;
+}
+
+@media print {
+  /* Hide global layout rendered outside the page (TopBar/Ticker/Navbar/Footer). */
+  body > :not(main) {
+    display: none !important;
+  }
+
+  @page {
+    margin: 12mm 10mm;
+  }
+
+  body {
+    background: white !important;
+  }
+  main {
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  /* Try to force Chrome/Edge to print colors & gradients. */
+  * {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  main {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+  }
+
+  .enrolment-no-print {
+    display: none !important;
+  }
+  .enrolment-print {
+    display: block !important;
+    padding: 0;
+  }
+
+  /* Badge print design (matches your example more closely). */
+  .enrolment-badge {
+    width: 86mm;
+    height: 132mm;
+    border-radius: 18mm;
+    overflow: hidden;
+    margin: 0 auto;
+    background-color: #0b4b74;
+    background: linear-gradient(
+      180deg,
+      #0b4b74 0%,
+      #0b4b74 54%,
+      var(--red) 54%,
+      var(--red-dark) 100%
+    );
+    box-shadow: none;
+    position: relative;
+    border: 1px solid rgba(255,255,255,0.18);
+    display: flex;
+    flex-direction: column;
+  }
+
+  .enrolment-badge-top {
+    padding: 10mm 6mm 0mm;
+    color: white;
+  }
+
+  .enrolment-badge-brand {
+    display: flex;
+    align-items: center;
+    gap: 4mm;
+    margin-bottom: 4mm;
+  }
+
+  .enrolment-badge-logo {
+    width: 18mm;
+    height: 18mm;
+    border-radius: 5mm;
+    object-fit: cover;
+    background: white;
+    border: 2px solid rgba(255,255,255,0.22);
+  }
+
+  .enrolment-badge-brand-text {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2mm;
+  }
+
+  .enrolment-badge-pretitle {
+    font-size: 3.2mm;
+    font-weight: 900;
+    letter-spacing: 0.6mm;
+    opacity: 0.9;
+  }
+
+  .enrolment-badge-title {
+    font-size: 6.1mm;
+    font-weight: 1000;
+    letter-spacing: 0.2mm;
+    line-height: 1;
+  }
+
+  .enrolment-badge-subtitle {
+    margin-top: 2mm;
+    font-size: 4.3mm;
+    font-weight: 900;
+    letter-spacing: 0.5mm;
+  }
+
+  .enrolment-badge-qr-area {
+    padding: 2mm 6mm 0mm;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3mm;
+  }
+
+  .enrolment-badge-qr {
+    width: 45mm;
+    height: 45mm;
+    object-fit: contain;
+    background: white;
+    padding: 2mm;
+    border-radius: 6mm;
+    border: 1px solid rgba(255,255,255,0.18);
+  }
+
+  .enrolment-badge-shortid {
+    text-align: center;
+    color: var(--navy);
+    background: rgba(255,255,255,0.82);
+    border-radius: 6mm;
+    padding: 2.2mm 3mm;
+    border: 1px solid rgba(11,75,116,0.18);
+    width: 100%;
+    max-width: 62mm;
+  }
+
+  .enrolment-badge-shortid-label {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 3.5mm;
+    font-weight: 900;
+    letter-spacing: 0.2mm;
+    text-transform: uppercase;
+    color: rgba(26,21,16,0.55);
+    margin-bottom: 1mm;
+  }
+
+  .enrolment-badge-shortid-code {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 4.3mm;
+    font-weight: 1000;
+    word-break: break-word;
+    color: #0b4b74;
+  }
+
+  .enrolment-badge-bottom {
+    background: linear-gradient(180deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.0) 100%);
+    padding: 0mm 8mm 6mm;
+  }
+
+  .enrolment-badge-confidential {
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 1000;
+    font-size: 3.6mm;
+    letter-spacing: 0.25mm;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.95);
+    text-align: center;
+    margin-top: 1mm;
+    line-height: 1.25;
+  }
+}
