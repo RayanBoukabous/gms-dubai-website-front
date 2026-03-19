@@ -10,10 +10,12 @@ export async function POST(request: Request) {
     const parent_email = formData.get('parent_email')
     const profile = formData.get('profile')
     const class_name = formData.get('class_name')
+    const recaptcha_token = formData.get('recaptcha_token')
 
     const apiKey = process.env.REGISTER_API_KEY
+    const recaptchaSecret = process.env.RECAPTCHA_SECRET_KEY
 
-    const required = { file, first_name, last_name, parent_email, profile, class_name }
+    const required = { file, first_name, last_name, parent_email, profile, class_name, recaptcha_token }
     for (const [k, v] of Object.entries(required)) {
       if (!v) {
         return NextResponse.json(
@@ -21,6 +23,30 @@ export async function POST(request: Request) {
           { status: 400 }
         )
       }
+    }
+    if (!recaptchaSecret) {
+      return NextResponse.json(
+        { status: 'error', message: 'Server misconfiguration: RECAPTCHA_SECRET_KEY missing' },
+        { status: 500 }
+      )
+    }
+
+    // Verify Google reCAPTCHA v2 token server-side.
+    const verifyBody = new URLSearchParams()
+    verifyBody.append('secret', recaptchaSecret)
+    verifyBody.append('response', String(recaptcha_token))
+    const verifyRes = await fetch('https://www.google.com/recaptcha/api/siteverify', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: verifyBody.toString(),
+      cache: 'no-store',
+    })
+    const verifyData = await verifyRes.json().catch(() => null)
+    if (!verifyRes.ok || !verifyData?.success) {
+      return NextResponse.json(
+        { status: 'error', message: 'Captcha verification failed' },
+        { status: 400 }
+      )
     }
 
     // Forward as multipart/form-data to your face registration API.

@@ -1539,6 +1539,31 @@ footer {
   justify-content: center;
 }
 
+.enrolment-captcha-wrap {
+  margin-top: 14px;
+  background: rgba(74,125,181,0.06);
+  border: 1px solid rgba(74,125,181,0.22);
+  border-radius: 12px;
+  padding: 14px;
+}
+
+.enrolment-captcha-title {
+  color: var(--navy);
+  font-weight: 800;
+  font-size: 13px;
+  margin-bottom: 10px;
+  letter-spacing: 0.2px;
+}
+
+.enrolment-captcha-missing {
+  color: #7A1111;
+  font-size: 13px;
+  background: rgba(217,56,42,0.08);
+  border: 1px solid rgba(217,56,42,0.22);
+  border-radius: 8px;
+  padding: 10px 12px;
+}
+
 .btn-outline-blue {
   background: transparent;
   color: var(--navy);

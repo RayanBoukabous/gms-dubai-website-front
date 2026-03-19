@@ -1,6 +1,7 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import Script from 'next/script'
 
 type RegisterResult = {
   status: string
@@ -45,6 +46,11 @@ export default function EnrolmentPage() {
   const [parentEmail, setParentEmail] = useState('')
   const [profile, setProfile] = useState('Élève')
   const [className, setClassName] = useState(GRADE_OPTIONS[0])
+  const [recaptchaLoaded, setRecaptchaLoaded] = useState(false)
+  const [recaptchaToken, setRecaptchaToken] = useState('')
+  const recaptchaWidgetIdRef = useRef<number | null>(null)
+  const recaptchaContainerRef = useRef<HTMLDivElement | null>(null)
+  const recaptchaSiteKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY ?? ''
 
   useEffect(() => {
     if (!file) {
@@ -56,6 +62,20 @@ export default function EnrolmentPage() {
     return () => URL.revokeObjectURL(url)
   }, [file])
 
+  useEffect(() => {
+    if (!recaptchaLoaded || !recaptchaSiteKey || !recaptchaContainerRef.current) return
+    const grecaptcha = (window as any).grecaptcha
+    if (!grecaptcha || typeof grecaptcha.render !== 'function') return
+    if (recaptchaWidgetIdRef.current !== null) return
+
+    recaptchaWidgetIdRef.current = grecaptcha.render(recaptchaContainerRef.current, {
+      sitekey: recaptchaSiteKey,
+      callback: (token: string) => setRecaptchaToken(token),
+      'expired-callback': () => setRecaptchaToken(''),
+      'error-callback': () => setRecaptchaToken(''),
+    })
+  }, [recaptchaLoaded, recaptchaSiteKey])
+
   const onSubmit = async () => {
     setError(null)
     setResult(null)
@@ -66,6 +86,8 @@ export default function EnrolmentPage() {
     if (!parentEmail.trim()) return setError('Parent email is required.')
     if (!profile.trim()) return setError('Profile is required.')
     if (!className.trim()) return setError('Class name is required.')
+    if (!recaptchaSiteKey) return setError('Captcha is not configured. Missing NEXT_PUBLIC_RECAPTCHA_SITE_KEY.')
+    if (!recaptchaToken) return setError('Please complete the captcha verification.')
 
     setLoading(true)
     try {
@@ -76,6 +98,7 @@ export default function EnrolmentPage() {
       fd.append('parent_email', parentEmail)
       fd.append('profile', profile)
       fd.append('class_name', className)
+      fd.append('recaptcha_token', recaptchaToken)
 
       const res = await fetch('/api/register', {
         method: 'POST',
@@ -92,6 +115,11 @@ export default function EnrolmentPage() {
       }
 
       setResult(data)
+      const grecaptcha = (window as any).grecaptcha
+      if (grecaptcha && recaptchaWidgetIdRef.current !== null) {
+        grecaptcha.reset(recaptchaWidgetIdRef.current)
+      }
+      setRecaptchaToken('')
     } catch (e) {
       setError(String(e))
     } finally {
@@ -101,6 +129,11 @@ export default function EnrolmentPage() {
 
   return (
     <div>
+      <Script
+        src="https://www.google.com/recaptcha/api.js?render=explicit"
+        strategy="afterInteractive"
+        onLoad={() => setRecaptchaLoaded(true)}
+      />
       <div className="enrolment-no-print">
         <div className="page-banner">
           <div className="breadcrumb">
@@ -221,6 +254,17 @@ export default function EnrolmentPage() {
               >
                 By submitting, you confirm that the uploaded image and details are accurate. Submission
                 does not guarantee admission.
+              </div>
+
+              <div className="enrolment-captcha-wrap">
+                <div className="enrolment-captcha-title">Security Verification</div>
+                {recaptchaSiteKey ? (
+                  <div ref={recaptchaContainerRef} />
+                ) : (
+                  <div className="enrolment-captcha-missing">
+                    Missing reCAPTCHA site key. Set <code>NEXT_PUBLIC_RECAPTCHA_SITE_KEY</code>.
+                  </div>
+                )}
               </div>
 
               {error && (
