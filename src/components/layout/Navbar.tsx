@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
+import SchoolIcon from '@/components/ui/SchoolIcon'
 
 interface NavbarProps {
   pathname: string
@@ -135,7 +136,7 @@ export default function Navbar({ pathname }: NavbarProps) {
                   style={{
                     display: 'flex', alignItems: 'center', gap: 4, padding: '0 12px', height: 64,
                     fontSize: 13, fontWeight: 600, color: isActive(pathname, item.href) ? 'var(--red)' : 'var(--navy)',
-                    textDecoration: 'none', letterSpacing: '0.3px', fontFamily: "'DM Sans', sans-serif", whiteSpace: 'nowrap',
+                    textDecoration: 'none', letterSpacing: '0.3px', fontFamily: 'var(--font-dm-sans), sans-serif', whiteSpace: 'nowrap',
                   }}
                 >
                   {item.label}
@@ -146,7 +147,7 @@ export default function Navbar({ pathname }: NavbarProps) {
                   style={{
                     display: 'flex', alignItems: 'center', gap: 4, padding: '0 12px', height: 64, fontSize: 13, fontWeight: 600,
                     color: item.children?.some(c => isActive(pathname, c.href)) ? 'var(--red)' : 'var(--navy)',
-                    letterSpacing: '0.3px', fontFamily: "'DM Sans', sans-serif", whiteSpace: 'nowrap', cursor: 'default',
+                    letterSpacing: '0.3px', fontFamily: 'var(--font-dm-sans), sans-serif', whiteSpace: 'nowrap', cursor: 'default',
                   }}
                 >
                   {item.label}
@@ -159,7 +160,7 @@ export default function Navbar({ pathname }: NavbarProps) {
                 <div className="navbar-dropdown">
                   {item.children.map((child) => (
                     <Link key={child.label} href={child.href} onClick={() => setOpenDropdown(null)} className="navbar-dropdown-item">
-                      {child.emoji && `${child.emoji} `}{child.label}
+                      {child.emoji && <SchoolIcon token={child.emoji} size={14} />} {child.label}
                     </Link>
                   ))}
                 </div>
@@ -212,7 +213,7 @@ export default function Navbar({ pathname }: NavbarProps) {
                       <div className={`navbar-drawer-sublinks ${mobileSubOpen === item.label ? 'open' : ''}`}>
                         {item.children.map((child) => (
                           <Link key={child.label} href={child.href} onClick={closeMobile}>
-                            {child.emoji && `${child.emoji} `}{child.label}
+                            {child.emoji && <SchoolIcon token={child.emoji} size={14} />} {child.label}
                           </Link>
                         ))}
                       </div>

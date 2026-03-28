@@ -1,38 +1,59 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import Script from 'next/script'
 
 type RegisterResult = {
   status: string
   face_id: string
   short_id: string
-  image_path: string
+  image_path?: string
   qr_code_path: string
   message?: string
 }
 
-const GRADE_OPTIONS = [
-  'Pre-KG',
-  'KG 1',
-  'KG 2',
-  'Grade 1',
-  'Grade 2',
-  'Grade 3',
-  'Grade 4',
-  'Grade 5',
-  'Grade 6',
-  'Grade 7',
-  'Grade 8',
-  'Grade 9',
-  'Grade 10',
-  'Grade 11 — Science',
-  'Grade 11 — Commerce',
-  'Grade 11 — Humanities',
-  'Grade 12 — Science',
-  'Grade 12 — Commerce',
-  'Grade 12 — Humanities',
-]
+type StudentProgram = {
+  id: string
+  label: string
+  grade: string
+  curriculum?: string
+  stream?: string
+}
+
+const PROFILE_OPTIONS = ['Student', 'Staff', 'Guardian', 'Admin'] as const
+
+function buildStudentPrograms(): StudentProgram[] {
+  const base: StudentProgram[] = [
+    { id: 'prekg', label: 'Pre-KG', grade: 'Pre-KG' },
+    { id: 'kg1', label: 'KG 1', grade: 'KG1' },
+    { id: 'kg2', label: 'KG 2', grade: 'KG2' },
+  ]
+  for (let n = 1; n <= 9; n++) {
+    base.push({ id: `g${n}`, label: `Grade ${n}`, grade: `G${n}` })
+  }
+  base.push(
+    { id: 'g10-cbse', label: 'Grade 10 — CBSE', grade: 'G10', curriculum: 'CBSE' },
+    { id: 'g10-kb', label: 'Grade 10 — Kerala Board (KB)', grade: 'G10', curriculum: 'KB' }
+  )
+  const streams = ['Science', 'Commerce', 'Humanities'] as const
+  const curricula = ['CBSE', 'KB'] as const
+  for (const g of [11, 12] as const) {
+    for (const cur of curricula) {
+      for (const s of streams) {
+        base.push({
+          id: `g${g}-${cur}-${s}`.toLowerCase().replace(/\s+/g, '-'),
+          label: `Grade ${g} — ${cur} — ${s}`,
+          grade: `G${g}`,
+          curriculum: cur,
+          stream: s,
+        })
+      }
+    }
+  }
+  return base
+}
+
+const STUDENT_PROGRAMS = buildStudentPrograms()
 
 export default function EnrolmentPage() {
   const [loading, setLoading] = useState(false)
@@ -44,13 +65,23 @@ export default function EnrolmentPage() {
   const [firstName, setFirstName] = useState('')
   const [lastName, setLastName] = useState('')
   const [parentEmail, setParentEmail] = useState('')
-  const [profile, setProfile] = useState('Élève')
-  const [className, setClassName] = useState(GRADE_OPTIONS[0])
+  const [parentPhone, setParentPhone] = useState('')
+  const [matricule, setMatricule] = useState('')
+  const [classNameOpt, setClassNameOpt] = useState('')
+  const [profile, setProfile] = useState<(typeof PROFILE_OPTIONS)[number]>('Student')
+  const [studentProgramId, setStudentProgramId] = useState(STUDENT_PROGRAMS[0].id)
   const [recaptchaLoaded, setRecaptchaLoaded] = useState(false)
   const [recaptchaToken, setRecaptchaToken] = useState('')
   const recaptchaWidgetIdRef = useRef<number | null>(null)
   const recaptchaContainerRef = useRef<HTMLDivElement | null>(null)
+  const errorRef = useRef<HTMLDivElement | null>(null)
   const recaptchaSiteKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY ?? ''
+  const skipRecaptcha = process.env.NEXT_PUBLIC_SKIP_RECAPTCHA === 'true'
+
+  const selectedStudentProgram = useMemo(
+    () => STUDENT_PROGRAMS.find((p) => p.id === studentProgramId) ?? STUDENT_PROGRAMS[0],
+    [studentProgramId]
+  )
 
   useEffect(() => {
     if (!file) {
@@ -63,7 +94,7 @@ export default function EnrolmentPage() {
   }, [file])
 
   useEffect(() => {
-    if (!recaptchaLoaded || !recaptchaSiteKey || !recaptchaContainerRef.current) return
+    if (skipRecaptcha || !recaptchaLoaded || !recaptchaSiteKey || !recaptchaContainerRef.current) return
     const grecaptcha = (window as any).grecaptcha
     if (!grecaptcha || typeof grecaptcha.render !== 'function') return
     if (recaptchaWidgetIdRef.current !== null) return
@@ -74,7 +105,13 @@ export default function EnrolmentPage() {
       'expired-callback': () => setRecaptchaToken(''),
       'error-callback': () => setRecaptchaToken(''),
     })
-  }, [recaptchaLoaded, recaptchaSiteKey])
+  }, [skipRecaptcha, recaptchaLoaded, recaptchaSiteKey])
+
+  useEffect(() => {
+    if (error && errorRef.current) {
+      errorRef.current.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
+    }
+  }, [error])
 
   const onSubmit = async () => {
     setError(null)
@@ -83,22 +120,40 @@ export default function EnrolmentPage() {
     if (!file) return setError('Please upload a JPG/PNG face image.')
     if (!firstName.trim()) return setError('First name is required.')
     if (!lastName.trim()) return setError('Last name is required.')
-    if (!parentEmail.trim()) return setError('Parent email is required.')
     if (!profile.trim()) return setError('Profile is required.')
-    if (!className.trim()) return setError('Class name is required.')
-    if (!recaptchaSiteKey) return setError('Captcha is not configured. Missing NEXT_PUBLIC_RECAPTCHA_SITE_KEY.')
-    if (!recaptchaToken) return setError('Please complete the captcha verification.')
+    if (profile === 'Student' && !selectedStudentProgram.grade) {
+      return setError('Please select a grade / programme.')
+    }
+    if (!skipRecaptcha) {
+      if (!recaptchaSiteKey) return setError('Captcha is not configured. Missing NEXT_PUBLIC_RECAPTCHA_SITE_KEY.')
+      if (!recaptchaToken) return setError('Please complete the captcha verification.')
+    }
 
     setLoading(true)
     try {
       const fd = new FormData()
       fd.append('file', file)
-      fd.append('first_name', firstName)
-      fd.append('last_name', lastName)
-      fd.append('parent_email', parentEmail)
+      fd.append('first_name', firstName.trim())
+      fd.append('last_name', lastName.trim())
       fd.append('profile', profile)
-      fd.append('class_name', className)
-      fd.append('recaptcha_token', recaptchaToken)
+      if (!skipRecaptcha) {
+        fd.append('recaptcha_token', recaptchaToken)
+      }
+
+      if (parentEmail.trim()) fd.append('parent_email', parentEmail.trim())
+      if (parentPhone.trim()) fd.append('parent_phone', parentPhone.trim())
+      if (matricule.trim()) fd.append('matricule', matricule.trim())
+      if (classNameOpt.trim()) fd.append('class_name', classNameOpt.trim())
+
+      if (profile === 'Student') {
+        fd.append('grade', selectedStudentProgram.grade)
+        if (selectedStudentProgram.curriculum) {
+          fd.append('curriculum', selectedStudentProgram.curriculum)
+        }
+        if (selectedStudentProgram.stream) {
+          fd.append('stream', selectedStudentProgram.stream)
+        }
+      }
 
       const res = await fetch('/api/register', {
         method: 'POST',
@@ -106,6 +161,14 @@ export default function EnrolmentPage() {
       })
 
       const data = (await res.json().catch(() => null)) as RegisterResult | null
+
+      if (process.env.NODE_ENV === 'development') {
+        console.log('[enrolment] /api/register response', {
+          httpStatus: res.status,
+          ok: res.ok,
+          body: data,
+        })
+      }
 
       if (!res.ok) {
         const msg = data?.message ?? 'Register failed.'
@@ -115,11 +178,13 @@ export default function EnrolmentPage() {
       }
 
       setResult(data)
-      const grecaptcha = (window as any).grecaptcha
-      if (grecaptcha && recaptchaWidgetIdRef.current !== null) {
-        grecaptcha.reset(recaptchaWidgetIdRef.current)
+      if (!skipRecaptcha) {
+        const grecaptcha = (window as any).grecaptcha
+        if (grecaptcha && recaptchaWidgetIdRef.current !== null) {
+          grecaptcha.reset(recaptchaWidgetIdRef.current)
+        }
+        setRecaptchaToken('')
       }
-      setRecaptchaToken('')
     } catch (e) {
       setError(String(e))
     } finally {
@@ -129,11 +194,13 @@ export default function EnrolmentPage() {
 
   return (
     <div>
-      <Script
-        src="https://www.google.com/recaptcha/api.js?render=explicit"
-        strategy="afterInteractive"
-        onLoad={() => setRecaptchaLoaded(true)}
-      />
+      {!skipRecaptcha ? (
+        <Script
+          src="https://www.google.com/recaptcha/api.js?render=explicit"
+          strategy="afterInteractive"
+          onLoad={() => setRecaptchaLoaded(true)}
+        />
+      ) : null}
       <div className="enrolment-no-print">
         <div className="page-banner">
           <div className="breadcrumb">
@@ -146,8 +213,15 @@ export default function EnrolmentPage() {
         <section>
           <div className="section-inner">
             <div className="admission-form-wrap" id="admission-form-anchor">
-              <div className="form-section-title">Register (Face + Parent)</div>
+              <div className="form-section-title">Register (Face + details)</div>
 
+              <form
+                noValidate
+                onSubmit={(e) => {
+                  e.preventDefault()
+                  void onSubmit()
+                }}
+              >
               <div className="form-grid-3">
                 <div className="form-group">
                   <label>
@@ -198,9 +272,38 @@ export default function EnrolmentPage() {
 
               <div className="form-grid-3">
                 <div className="form-group">
-                  <label>
-                    Parent Email <span className="required">*</span>
-                  </label>
+                  <label>Profile <span className="required">*</span></label>
+                  <select value={profile} onChange={(e) => setProfile(e.target.value as (typeof PROFILE_OPTIONS)[number])}>
+                    {PROFILE_OPTIONS.map((p) => (
+                      <option key={p} value={p}>
+                        {p}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                {profile === 'Student' ? (
+                  <div className="form-group" style={{ gridColumn: 'span 2' }}>
+                    <label>
+                      Grade / programme <span className="required">*</span>
+                    </label>
+                    <select
+                      value={studentProgramId}
+                      onChange={(e) => setStudentProgramId(e.target.value)}
+                    >
+                      {STUDENT_PROGRAMS.map((p) => (
+                        <option key={p.id} value={p.id}>
+                          {p.label}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                ) : null}
+              </div>
+
+              <div className="form-grid-3">
+                <div className="form-group">
+                  <label>Parent email (optional)</label>
                   <input
                     type="email"
                     placeholder="email@example.com"
@@ -210,33 +313,42 @@ export default function EnrolmentPage() {
                 </div>
 
                 <div className="form-group">
-                  <label>
-                    Profile <span className="required">*</span>
-                  </label>
-                  <select value={profile} onChange={(e) => setProfile(e.target.value)}>
-                    <option value="Enseignant">Enseignant</option>
-                    <option value="Élève">Élève</option>
-                  </select>
+                  <label>Parent phone (optional)</label>
+                  <input
+                    type="tel"
+                    placeholder="+971 …"
+                    value={parentPhone}
+                    onChange={(e) => setParentPhone(e.target.value)}
+                  />
                 </div>
 
                 <div className="form-group">
-                  <label>
-                    Class Name <span className="required">*</span>
-                  </label>
-                  <select value={className} onChange={(e) => setClassName(e.target.value)}>
-                    {GRADE_OPTIONS.map((g) => (
-                      <option key={g} value={g}>
-                        {g}
-                      </option>
-                    ))}
-                  </select>
+                  <label>Matricule (optional)</label>
+                  <input
+                    type="text"
+                    value={matricule}
+                    onChange={(e) => setMatricule(e.target.value)}
+                  />
+                </div>
+              </div>
+
+              <div className="form-grid-3">
+                <div className="form-group">
+                  <label>Class name (optional)</label>
+                  <input
+                    type="text"
+                    placeholder="e.g. homeroom / section"
+                    value={classNameOpt}
+                    onChange={(e) => setClassNameOpt(e.target.value)}
+                  />
                 </div>
               </div>
 
               <div className="form-grid-3">
                 <div className="form-group" style={{ gridColumn: '1 / -1' }}>
                   <div style={{ color: 'rgba(26,21,16,0.65)', fontSize: 13, lineHeight: 1.5 }}>
-                    Registration API key is handled automatically on the server (not shown to users).
+                    API authentication is handled on the server via{' '}
+                    <code style={{ fontSize: 12 }}>X-API-Key</code> (not exposed to the browser).
                   </div>
                 </div>
               </div>
@@ -256,19 +368,30 @@ export default function EnrolmentPage() {
                 does not guarantee admission.
               </div>
 
-              <div className="enrolment-captcha-wrap">
-                <div className="enrolment-captcha-title">Security Verification</div>
-                {recaptchaSiteKey ? (
-                  <div ref={recaptchaContainerRef} />
-                ) : (
-                  <div className="enrolment-captcha-missing">
-                    Missing reCAPTCHA site key. Set <code>NEXT_PUBLIC_RECAPTCHA_SITE_KEY</code>.
-                  </div>
-                )}
-              </div>
+              {!skipRecaptcha ? (
+                <div className="enrolment-captcha-wrap">
+                  <div className="enrolment-captcha-title">Security Verification</div>
+                  {recaptchaSiteKey ? (
+                    <div ref={recaptchaContainerRef} />
+                  ) : (
+                    <div className="enrolment-captcha-missing">
+                      Missing reCAPTCHA site key. Set <code>NEXT_PUBLIC_RECAPTCHA_SITE_KEY</code>.
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <div
+                  className="enrolment-captcha-wrap"
+                  style={{ fontSize: 13, color: 'rgba(26,21,16,0.55)' }}
+                >
+                  reCAPTCHA is disabled for testing (<code>NEXT_PUBLIC_SKIP_RECAPTCHA=true</code>).
+                </div>
+              )}
 
               {error && (
                 <div
+                  ref={errorRef}
+                  role="alert"
                   className="success-message"
                   style={{
                     background: 'rgba(217,56,42,0.08)',
@@ -282,14 +405,15 @@ export default function EnrolmentPage() {
 
               <div style={{ textAlign: 'center', marginTop: 28 }}>
                 <button
+                  type="submit"
                   className="btn-primary"
                   style={{ fontSize: 16, padding: '16px 40px' }}
-                  onClick={onSubmit}
                   disabled={loading}
                 >
                   {loading ? 'Submitting…' : 'Submit Registration →'}
                 </button>
               </div>
+              </form>
 
               {result?.status === 'success' && (
                 <div className="enrolment-result-wrap">

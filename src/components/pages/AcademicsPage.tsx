@@ -1,5 +1,6 @@
 'use client'
 import { useState } from 'react'
+import SchoolIcon from '@/components/ui/SchoolIcon'
 
 interface AcademicsPageProps {
   initialTab?: string
@@ -54,7 +55,7 @@ export default function AcademicsPage({ initialTab = 'cbse' }: AcademicsPageProp
                   { icon: '📜', title: 'Senior — Humanities', desc: 'History, Geography, Political Science, Economics, English, Psychology.' },
                 ].map(c => (
                   <div key={c.title} className="ai-card">
-                    <div className="ai-icon">{c.icon}</div>
+                    <div className="ai-icon"><SchoolIcon token={c.icon} size={28} /></div>
                     <h3>{c.title}</h3>
                     <p>{c.desc}</p>
                   </div>
@@ -80,7 +81,7 @@ export default function AcademicsPage({ initialTab = 'cbse' }: AcademicsPageProp
                   { icon: '🌏', title: 'Cultural Identity', desc: 'Preserving Kerala cultural heritage, languages, and traditions alongside modern education.' },
                 ].map(c => (
                   <div key={c.title} className="ai-card">
-                    <div className="ai-icon">{c.icon}</div>
+                    <div className="ai-icon"><SchoolIcon token={c.icon} size={28} /></div>
                     <h3>{c.title}</h3>
                     <p>{c.desc}</p>
                   </div>
@@ -104,7 +105,7 @@ export default function AcademicsPage({ initialTab = 'cbse' }: AcademicsPageProp
                   { icon: '👨‍👩‍👧', title: 'Family Partnership', desc: 'Regular meetings and transparent communication between school and parents/guardians.' },
                 ].map(c => (
                   <div key={c.title} className="ai-card">
-                    <div className="ai-icon">{c.icon}</div>
+                    <div className="ai-icon"><SchoolIcon token={c.icon} size={28} /></div>
                     <h3>{c.title}</h3>
                     <p>{c.desc}</p>
                   </div>

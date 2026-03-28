@@ -3,6 +3,7 @@
 import { useEffect, useState, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { useModal } from '@/components/layout/AppShell'
+import SchoolIcon from '@/components/ui/SchoolIcon'
 
 /** Parse stat value like "2,600+", "+6000", "98%", "40+" into number + suffix */
 function parseStatValue(value: string): { num: number; suffix: string } {
@@ -219,7 +220,7 @@ export default function HomePage() {
         <div className="hero-pattern" />
         <div className="hero-content">
           <div className="hero-text-block">
-            <div className="hero-badge">🎓 Est. 1982 — Over 40 Years of Excellence</div>
+            <div className="hero-badge"><SchoolIcon token="🎓" size={14} /> Est. 1982 — Over 40 Years of Excellence</div>
             <h1>A Journey to<br /><em>Excellence</em><br />Starts Here</h1>
             <p className="hero-sub">
               Gulf Model School Dubai — nurturing 2,600+ young minds through CBSE and Kerala Board curricula,
@@ -263,7 +264,7 @@ export default function HomePage() {
                   gap: 12,
                 }}
               >
-                <span style={{ fontSize: 24 }}>🥽</span>
+                <SchoolIcon token="🥽" size={22} />
                 <div>
                   <div style={{ color: 'white', fontSize: 13, fontWeight: 700 }}>VR Classroom</div>
                   <div style={{ color: 'rgba(255,255,255,0.7)', fontSize: 11 }}>First in Dubai Private Schools</div>
@@ -282,7 +283,7 @@ export default function HomePage() {
                   gap: 12,
                 }}
               >
-                <span style={{ fontSize: 24 }}>🤖</span>
+                <SchoolIcon token="🤖" size={22} />
                 <div>
                   <div style={{ color: 'white', fontSize: 13, fontWeight: 700 }}>AI Classroom Lab</div>
                   <div style={{ color: 'rgba(255,255,255,0.7)', fontSize: 11 }}>Python &amp; Machine Learning</div>
@@ -339,7 +340,9 @@ export default function HomePage() {
             ).map((programme) => (
               <div key={programme.id} className="curriculum-card">
                 <div className={`curriculum-header ${programme.curriculum === 'cbse' ? 'cbse' : 'kerala'}`}>
-                  <div className="curr-icon">{programme.curriculum === 'cbse' ? '🎓' : '📚'}</div>
+                  <div className="curr-icon">
+                    <SchoolIcon token={programme.curriculum === 'cbse' ? '🎓' : '📚'} size={26} />
+                  </div>
                   <div className="curr-title">
                     <h3>{programme.title}</h3>
                     <span>{programme.subtitle}</span>
@@ -362,7 +365,7 @@ export default function HomePage() {
       <section className="vr-section">
         <div className="vr-inner">
           <div>
-            <div className="vr-badge">🥽 World First · Dubai Private Schools</div>
+            <div className="vr-badge"><SchoolIcon token="🥽" size={14} /> World First · Dubai Private Schools</div>
             <h2>Introducing the <em>VR Classroom</em> — A Dubai First</h2>
             <p>Gulf Model School is proud to be the first private school in Dubai to integrate a fully immersive Virtual Reality classroom into the curriculum. Students explore the cosmos, science, and history like never before.</p>
             <p>Our inaugural lesson: <strong style={{ color: '#60B4FF' }}>The Solar System</strong> — travel through space, orbit planets, and witness astronomical events in real-time immersive VR.</p>
@@ -374,7 +377,7 @@ export default function HomePage() {
                 { icon: '🏆', text: 'First private school in Dubai to integrate VR education' },
               ].map(f => (
                 <div key={f.text} className="vr-feat">
-                  <span className="vr-feat-icon">{f.icon}</span>
+                  <span className="vr-feat-icon"><SchoolIcon token={f.icon} size={18} /></span>
                   {f.text}
                 </div>
               ))}
@@ -472,7 +475,7 @@ export default function HomePage() {
                   ]
             ).map((card) => (
               <div key={card.id} className="ai-card">
-                <div className="ai-icon">{card.icon}</div>
+                <div className="ai-icon"><SchoolIcon token={card.icon} size={28} /></div>
                 <h3>{card.title}</h3>
                 <p>{card.description}</p>
               </div>
@@ -488,7 +491,7 @@ export default function HomePage() {
       <section className="askbook-section">
         <div className="askbook-inner">
           <div>
-            <div className="saas-badge">📚 AI-Powered · SaaS Platform</div>
+            <div className="saas-badge"><SchoolIcon token="📚" size={14} /> AI-Powered · SaaS Platform</div>
             <h2>Ask My Book <em>with AI</em></h2>
             <p>A revolutionary AI-powered learning platform that lets students ask questions directly from their CBSE and Kerala Board textbooks — and get instant, curriculum-accurate answers.</p>
             <p>Available for Grades 5–12 across both curricula. 7-day free trial included for all GMS students.</p>
@@ -500,7 +503,7 @@ export default function HomePage() {
                 { icon: '📊', text: 'Progress tracking and study analytics' },
               ].map(f => (
                 <div key={f.text} className="ask-feat">
-                  <span className="ask-feat-icon">{f.icon}</span>
+                  <span className="ask-feat-icon"><SchoolIcon token={f.icon} size={16} /></span>
                   <span>{f.text}</span>
                 </div>
               ))}
@@ -585,7 +588,7 @@ export default function HomePage() {
                   transition: 'box-shadow 0.2s, transform 0.2s',
                 }}
               >
-                <div className="news-img">{item.emoji}</div>
+                <div className="news-img"><SchoolIcon token={item.emoji} size={44} /></div>
                 <div className="news-body">
                   <div className="news-tag">{item.category_label}</div>
                   <h3>{item.title}</h3>

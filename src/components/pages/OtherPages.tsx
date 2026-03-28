@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { useModal } from '@/components/layout/AppShell'
+import SchoolIcon from '@/components/ui/SchoolIcon'
 
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL ?? 'http://localhost:8001'
 
@@ -334,8 +335,8 @@ export function FeesPage() {
             <div className="payment-methods-grid">
               {methods.map((m) => (
                 <div key={m.title} style={{ background: 'white', borderRadius: 8, padding: 20, textAlign: 'center' }}>
-                  <div style={{ fontSize: 32, marginBottom: 12 }}>{m.icon}</div>
-                  <h4 style={{ color: 'var(--navy)', marginBottom: 8, fontFamily: "'DM Sans', sans-serif" }}>{m.title}</h4>
+                  <div style={{ marginBottom: 12 }}><SchoolIcon token={m.icon} size={28} /></div>
+                  <h4 style={{ color: 'var(--navy)', marginBottom: 8, fontFamily: 'var(--font-dm-sans), sans-serif' }}>{m.title}</h4>
                   <p style={{ fontSize: 13, color: 'var(--text-light)', lineHeight: 1.6 }}>{m.description}</p>
                 </div>
               ))}
@@ -416,7 +417,7 @@ export function AboutPage() {
                 ['🏆', 'KHDA Rating', 'Acceptable — continuously improving'],
               ].map(([icon, label, val]) => (
                 <div key={label} style={{ display: 'flex', justifyContent: 'space-between', padding: '10px 0', borderBottom: '1px solid rgba(255,255,255,0.08)', fontSize: 14 }}>
-                  <span>{icon} {label}</span>
+                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}><SchoolIcon token={icon} size={14} /> {label}</span>
                   <span style={{ color: 'rgba(255,255,255,0.6)' }}>{val}</span>
                 </div>
               ))}
@@ -430,7 +431,7 @@ export function AboutPage() {
               { icon: '🤝', title: 'Community', desc: 'A nurturing school community where every student, teacher, and parent is valued.' },
             ].map(p => (
               <div key={p.title} className="pillar">
-                <div className="pillar-icon">{p.icon}</div>
+                <div className="pillar-icon"><SchoolIcon token={p.icon} size={30} /></div>
                 <h3>{p.title}</h3>
                 <p>{p.desc}</p>
               </div>
@@ -475,7 +476,7 @@ export function VRClassroomPage() {
       <div style={{ background: 'linear-gradient(135deg,#050d1e,#0d1b3e)', padding: '80px 40px', textAlign: 'center', position: 'relative', overflow: 'hidden' }}>
         <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at 50% 100%,rgba(0,150,255,0.2),transparent 60%)' }} />
         <div style={{ position: 'relative', zIndex: 1 }}>
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'rgba(0,150,255,0.15)', border: '1px solid rgba(0,150,255,0.3)', color: '#60B4FF', padding: '6px 14px', borderRadius: 20, fontSize: 11, fontWeight: 700, letterSpacing: '1.5px', textTransform: 'uppercase', marginBottom: 20 }}>🏆 {c?.hero_badge ?? 'First in Dubai Private Schools'}</div>
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'rgba(0,150,255,0.15)', border: '1px solid rgba(0,150,255,0.3)', color: '#60B4FF', padding: '6px 14px', borderRadius: 20, fontSize: 11, fontWeight: 700, letterSpacing: '1.5px', textTransform: 'uppercase', marginBottom: 20 }}><SchoolIcon token="🏆" size={14} /> {c?.hero_badge ?? 'First in Dubai Private Schools'}</div>
           <h1 style={{ color: 'white', fontSize: 52, marginBottom: 16 }}>{c?.hero_title ?? 'VR Classroom'}</h1>
           <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: 18, maxWidth: 600, margin: '0 auto' }}>{c?.hero_subtitle ?? 'Gulf Model School — pioneering immersive Virtual Reality education in Dubai since 2026.'}</p>
         </div>
@@ -483,12 +484,12 @@ export function VRClassroomPage() {
       <section className="vr-section" style={{ padding: '80px 40px' }}>
         <div className="vr-inner">
           <div>
-            <div className="vr-badge">🌍 {c?.section_badge ?? 'Inaugural Lesson'}</div>
+            <div className="vr-badge"><SchoolIcon token="🌍" size={14} /> {c?.section_badge ?? 'Inaugural Lesson'}</div>
             <h2 style={{ color: 'white', fontSize: 40, marginBottom: 16 }}>{c?.section_title ?? 'Our Solar System — In Full VR'}</h2>
             <div style={{ color: 'rgba(255,255,255,0.75)' }} dangerouslySetInnerHTML={{ __html: sectionBody }} />
             <div className="vr-features" style={{ marginTop: 24 }}>
               {features.map((f, i) => (
-                <div key={i} className="vr-feat"><span className="vr-feat-icon">{f.icon}</span>{f.description || f.title}</div>
+                <div key={i} className="vr-feat"><span className="vr-feat-icon"><SchoolIcon token={f.icon} size={18} /></span>{f.description || f.title}</div>
               ))}
             </div>
           </div>
@@ -499,7 +500,7 @@ export function VRClassroomPage() {
               </div>
             </div>
             <div style={{ marginTop: 24, display: 'inline-flex', alignItems: 'center', gap: 8, background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, padding: '12px 20px', color: 'rgba(255,255,255,0.8)', fontSize: 14 }}>
-              🥽 {c?.features_note ?? 'VR sessions available for Grades 3–12'}
+              <SchoolIcon token="🥽" size={16} /> {c?.features_note ?? 'VR sessions available for Grades 3–12'}
             </div>
           </div>
         </div>
@@ -510,7 +511,7 @@ export function VRClassroomPage() {
           <div className="ai-grid" style={{ marginTop: 32 }}>
             {lessons.map((l, i) => (
               <div key={i} className="ai-card" style={{ borderTopColor: 'var(--navy)' }}>
-                <div className="ai-icon">{l.icon}</div>
+                <div className="ai-icon"><SchoolIcon token={l.icon} size={28} /></div>
                 <h3>{l.title}</h3>
                 <p>{l.description}</p>
                 <div style={{ fontSize: 12, color: 'var(--gray)', marginTop: 8 }}>{l.when_label}</div>
@@ -586,7 +587,7 @@ export function AILabPage() {
           <div className="ai-grid">
             {cards.map((card, i) => (
               <div key={i} className="ai-card">
-                <div className="ai-icon">{card.icon}</div>
+                <div className="ai-icon"><SchoolIcon token={card.icon} size={28} /></div>
                 <h3>{card.title}</h3>
                 <p>{card.description}</p>
               </div>
@@ -628,14 +629,14 @@ export function AskBookPage() {
       <section className="askbook-section">
         <div className="askbook-inner">
           <div>
-            <div className="saas-badge">📚 {c?.badge ?? 'AI-Powered · SaaS Platform'}</div>
+            <div className="saas-badge"><SchoolIcon token="📚" size={14} /> {c?.badge ?? 'AI-Powered · SaaS Platform'}</div>
             <h2>{c?.section_title ?? 'Your Textbook, Reimagined'}</h2>
             <p>{c?.intro_paragraph_1 ?? 'Ask My Book is a revolutionary AI platform that lets students ask questions directly from their CBSE and Kerala Board textbooks — and get instant, curriculum-accurate answers.'}</p>
             <p>{c?.intro_paragraph_2 ?? 'Available for Grades 5–12. 7-day free trial included for all GMS students.'}</p>
             <div className="askbook-features">
               {features.map((f, i) => (
                 <div key={i} className="ask-feat">
-                  <span className="ask-feat-icon">{f.icon}</span>
+                  <span className="ask-feat-icon"><SchoolIcon token={f.icon} size={16} /></span>
                   <span>{f.description || f.title}</span>
                 </div>
               ))}
@@ -779,7 +780,7 @@ export function NewsPage() {
                   onKeyDown={clickable && n.slug ? (e) => { if (e.key === 'Enter') router.push(`/news/${n.slug}`) } : undefined}
                   style={{ cursor: clickable ? 'pointer' : undefined, position: 'relative' }}
                 >
-                  <div className="news-img">{n.emoji}</div>
+                  <div className="news-img"><SchoolIcon token={n.emoji} size={44} /></div>
                   <div className="news-body">
                     <div className="news-tag">{n.category_label}</div>
                     <h3>{n.title}</h3>
@@ -833,7 +834,7 @@ export function AchievementsPage() {
           <div className="achievements-grid">
             {list.map(a => (
               <div key={a.id} className="achievement-card">
-                <div className="ach-icon">{a.icon}</div>
+                <div className="ach-icon"><SchoolIcon token={a.icon} size={34} /></div>
                 <div className="ach-year">{a.year}</div>
                 <h3>{a.title}</h3>
                 <p>{a.description}</p>
@@ -873,7 +874,7 @@ export function GMMessagePage() {
           <div className="message-grid">
             <div className="message-card">
               <div className="msg-header">
-                <div className="msg-avatar">👔</div>
+                <div className="msg-avatar"><SchoolIcon token="👔" size={30} /></div>
                 <div className="msg-info">
                   <h3>{role}</h3>
                   <span>{org}</span>
@@ -922,7 +923,7 @@ export function PrincipalMessagePage() {
           <div className="message-grid">
             <div className="message-card">
               <div className="msg-header">
-                <div className="msg-avatar">🎓</div>
+                <div className="msg-avatar"><SchoolIcon token="🎓" size={30} /></div>
                 <div className="msg-info">
                   <h3>{role}</h3>
                   <span>{org}</span>
@@ -979,7 +980,7 @@ export function GalleryPage() {
                 {item.image ? (
                   <img src={item.image.startsWith('http') ? item.image : `${API_BASE}${item.image}`} alt={item.title} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: 12 }} />
                 ) : (
-                  item.emoji
+                  <SchoolIcon token={item.emoji} size={34} />
                 )}
               </div>
             ))}
@@ -1026,7 +1027,7 @@ export function UniformsPage() {
           <div className="uniform-grid">
             {list.map(u => (
               <div key={u.id} className="uniform-card">
-                <div className="uniform-icon">{u.icon}</div>
+                <div className="uniform-icon"><SchoolIcon token={u.icon} size={36} /></div>
                 <h3>{u.title}</h3>
                 <p>{u.description}</p>
               </div>
@@ -1077,7 +1078,7 @@ export function TransportPage() {
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 24, marginBottom: 40 }}>
             {list.map(z => (
               <div key={z.id} className="ai-card">
-                <div className="ai-icon">{z.icon}</div>
+                <div className="ai-icon"><SchoolIcon token={z.icon} size={28} /></div>
                 <h3>{z.title}</h3>
                 <p>{z.description}</p>
               </div>

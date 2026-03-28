@@ -34,7 +34,7 @@ export default function TopBar() {
             fontWeight: 600,
             cursor: 'pointer',
             fontSize: 12,
-            fontFamily: "'DM Sans', sans-serif",
+            fontFamily: 'var(--font-dm-sans), sans-serif',
             transition: 'background 0.2s',
             textDecoration: 'none',
           }}

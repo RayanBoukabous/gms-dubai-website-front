@@ -1,5 +1,6 @@
 'use client'
 import { useState } from 'react'
+import SchoolIcon from '@/components/ui/SchoolIcon'
 
 export default function ContactPage() {
   const [submitted, setSubmitted] = useState(false)
@@ -26,7 +27,7 @@ export default function ContactPage() {
                 { icon: '📱', title: 'Social Media', content: 'Instagram: @gulfmodelschool\nFacebook: Gulf Model School Dubai' },
               ].map(item => (
                 <div key={item.title} className="contact-item">
-                  <div className="contact-icon">{item.icon}</div>
+                  <div className="contact-icon"><SchoolIcon token={item.icon} size={20} /></div>
                   <div>
                     <h4>{item.title}</h4>
                     <p style={{ whiteSpace: 'pre-line' }}>{item.content}</p>

@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400&family=DM+Sans:wght@300;400;500;600;700&display=swap');
+/* Fonts are loaded via next/font in layout.tsx (avoids @import blocking CSS in dev/prod). */
 
 :root {
   --red: #CC2222;
@@ -28,14 +28,14 @@ html {
 }
 
 body {
-  font-family: 'DM Sans', sans-serif;
+  font-family: var(--font-dm-sans), sans-serif;
   color: var(--text);
   background: var(--white);
   overflow-x: hidden;
 }
 
 h1, h2, h3, h4 {
-  font-family: 'Playfair Display', serif;
+  font-family: var(--font-playfair), serif;
 }
 
 /* ===== TICKER ANIMATION ===== */
@@ -190,7 +190,7 @@ h1, h2, h3, h4 {
 }
 
 .stat-card .num {
-  font-family: 'Playfair Display', serif;
+  font-family: var(--font-playfair), serif;
   font-size: 42px;
   font-weight: 700;
   color: var(--gold);
@@ -254,7 +254,7 @@ h1, h2, h3, h4 {
   text-decoration: none;
   display: inline-block;
   transition: all 0.2s;
-  font-family: 'DM Sans', sans-serif;
+  font-family: var(--font-dm-sans), sans-serif;
 }
 .btn-primary:hover { background: var(--red-light); transform: translateY(-2px); }
 
@@ -270,7 +270,7 @@ h1, h2, h3, h4 {
   text-decoration: none;
   display: inline-block;
   transition: all 0.2s;
-  font-family: 'DM Sans', sans-serif;
+  font-family: var(--font-dm-sans), sans-serif;
 }
 .btn-secondary:hover { border-color: white; background: rgba(255,255,255,0.08); }
 
@@ -629,7 +629,7 @@ footer {
 .footer-brand p { font-size: 14px; line-height: 1.7; margin-bottom: 20px; }
 
 .footer-col h4 {
-  font-family: 'DM Sans', sans-serif;
+  font-family: var(--font-dm-sans), sans-serif;
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 1.5px;
@@ -710,7 +710,7 @@ footer {
   border-bottom: 3px solid transparent;
   margin-bottom: -2px;
   transition: all 0.2s;
-  font-family: 'DM Sans', sans-serif;
+  font-family: var(--font-dm-sans), sans-serif;
 }
 .tab-btn:hover { color: var(--red); }
 .tab-btn.active { color: var(--red); border-bottom-color: var(--red); }
@@ -727,7 +727,7 @@ footer {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: 'Playfair Display', serif;
+  font-family: var(--font-playfair), serif;
   font-size: 20px;
   font-weight: 700;
   flex-shrink: 0;
@@ -789,7 +789,7 @@ footer {
   border: 1.5px solid rgba(13,27,62,0.12);
   border-radius: 6px;
   font-size: 14px;
-  font-family: 'DM Sans', sans-serif;
+  font-family: var(--font-dm-sans), sans-serif;
   color: var(--text);
   background: white;
   transition: border-color 0.2s;
@@ -833,7 +833,7 @@ footer {
   cursor: pointer;
   border: none;
   transition: background 0.2s;
-  font-family: 'DM Sans', sans-serif;
+  font-family: var(--font-dm-sans), sans-serif;
 }
 .btn-apply:hover { background: var(--red-dark); }
 
@@ -852,7 +852,7 @@ footer {
   font-size: 20px;
   flex-shrink: 0;
 }
-.contact-item h4 { font-size: 14px; color: var(--navy); margin-bottom: 4px; font-family: 'DM Sans', sans-serif; font-weight: 700; }
+.contact-item h4 { font-size: 14px; color: var(--navy); margin-bottom: 4px; font-family: var(--font-dm-sans), sans-serif; font-weight: 700; }
 .contact-item p { font-size: 14px; color: var(--text-light); line-height: 1.5; }
 .contact-form { background: var(--off-white); border-radius: 16px; padding: 36px; }
 .contact-form h3 { font-size: 26px; color: var(--navy); margin-bottom: 24px; }
@@ -935,7 +935,7 @@ footer {
   align-items: center;
   justify-content: center;
   transition: background 0.2s;
-  font-family: 'DM Sans', sans-serif;
+  font-family: var(--font-dm-sans), sans-serif;
 }
 .modal-close:hover { background: rgba(204,34,34,0.1); }
 
@@ -999,7 +999,7 @@ footer {
   display: flex;
   align-items: center;
   gap: 10px;
-  font-family: 'DM Sans', sans-serif;
+  font-family: var(--font-dm-sans), sans-serif;
   font-weight: 700;
 }
 .form-section-title:first-child { margin-top: 0; }
@@ -1090,7 +1090,7 @@ footer {
   font-weight: 500;
   border-left: 3px solid transparent;
   transition: all 0.15s;
-  font-family: 'DM Sans', sans-serif;
+  font-family: var(--font-dm-sans), sans-serif;
 }
 .navbar-dropdown-item:hover {
   background: var(--off-white);
@@ -1105,7 +1105,7 @@ footer {
   font-weight: 700;
   letter-spacing: 0.5px;
   font-size: 13px;
-  font-family: 'DM Sans', sans-serif;
+  font-family: var(--font-dm-sans), sans-serif;
   text-decoration: none;
   transition: background 0.2s;
 }
@@ -1215,7 +1215,7 @@ footer {
   background: none;
   border: none;
   cursor: pointer;
-  font-family: 'DM Sans', sans-serif;
+  font-family: var(--font-dm-sans), sans-serif;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -1478,7 +1478,7 @@ footer {
 }
 
 .enrolment-qr-shortid-code {
-  font-family: 'DM Sans', sans-serif;
+  font-family: var(--font-dm-sans), sans-serif;
   font-weight: 900;
   font-size: 12px;
   color: var(--navy);
@@ -1510,7 +1510,7 @@ footer {
 }
 
 .enrolment-id-value {
-  font-family: 'DM Sans', sans-serif;
+  font-family: var(--font-dm-sans), sans-serif;
   font-weight: 900;
   font-size: 12px;
   color: var(--navy);
@@ -1573,7 +1573,7 @@ footer {
   font-weight: 800;
   cursor: pointer;
   transition: all 0.2s;
-  font-family: 'DM Sans', sans-serif;
+  font-family: var(--font-dm-sans), sans-serif;
 }
 
 .btn-outline-blue:hover {
@@ -1726,7 +1726,7 @@ footer {
   }
 
   .enrolment-badge-shortid-label {
-    font-family: 'DM Sans', sans-serif;
+    font-family: var(--font-dm-sans), sans-serif;
     font-size: 3.5mm;
     font-weight: 900;
     letter-spacing: 0.2mm;
@@ -1736,7 +1736,7 @@ footer {
   }
 
   .enrolment-badge-shortid-code {
-    font-family: 'DM Sans', sans-serif;
+    font-family: var(--font-dm-sans), sans-serif;
     font-size: 4.3mm;
     font-weight: 1000;
     word-break: break-word;
@@ -1749,7 +1749,7 @@ footer {
   }
 
   .enrolment-badge-confidential {
-    font-family: 'DM Sans', sans-serif;
+    font-family: var(--font-dm-sans), sans-serif;
     font-weight: 1000;
     font-size: 3.6mm;
     letter-spacing: 0.25mm;
