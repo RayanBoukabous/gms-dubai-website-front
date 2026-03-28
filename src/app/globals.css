@@ -1582,6 +1582,779 @@ footer {
   color: var(--navy-light);
 }
 
+/* ═══════════════════════════════════════════════════════════
+   ENROLMENT — MULTI-STEP WOW REDESIGN
+   ═══════════════════════════════════════════════════════════ */
+
+/* Animations */
+@keyframes enrlSlideInRight {
+  from { opacity: 0; transform: translateX(36px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes enrlSlideInLeft {
+  from { opacity: 0; transform: translateX(-36px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes enrlPop {
+  0%   { transform: scale(0.7); opacity: 0; }
+  70%  { transform: scale(1.08); }
+  100% { transform: scale(1); opacity: 1; }
+}
+@keyframes enrlSpin {
+  to { transform: rotate(360deg); }
+}
+@keyframes enrlPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(13,27,62,0.25); }
+  50%       { box-shadow: 0 0 0 8px rgba(13,27,62,0); }
+}
+@keyframes enrlGradientShift {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.enrl-anim-fwd { animation: enrlSlideInRight 0.38s cubic-bezier(0.25,0.46,0.45,0.94) both; }
+.enrl-anim-bwd { animation: enrlSlideInLeft  0.38s cubic-bezier(0.25,0.46,0.45,0.94) both; }
+
+/* ── Hero ── */
+.enrl-hero {
+  background: linear-gradient(135deg, #0D1B3E 0%, #142247 45%, #0a1428 100%);
+  padding: 72px 40px 110px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.enrl-hero-deco {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+}
+.enrl-hero-deco1 {
+  width: 420px; height: 420px;
+  background: radial-gradient(circle, rgba(204,34,34,0.14) 0%, transparent 70%);
+  top: -120px; left: -80px;
+}
+.enrl-hero-deco2 {
+  width: 320px; height: 320px;
+  background: radial-gradient(circle, rgba(232,98,26,0.10) 0%, transparent 70%);
+  bottom: -60px; right: 10%;
+}
+.enrl-hero-deco3 {
+  width: 200px; height: 200px;
+  background: radial-gradient(circle, rgba(201,168,76,0.12) 0%, transparent 70%);
+  top: 20px; right: 20%;
+}
+
+.enrl-hero-inner { position: relative; z-index: 1; }
+
+.enrl-hero-title {
+  font-family: var(--font-playfair), serif;
+  font-size: clamp(34px, 5vw, 56px);
+  font-weight: 900;
+  color: white;
+  margin: 12px 0 10px;
+  line-height: 1.1;
+}
+
+.enrl-hero-sub {
+  font-size: 15px;
+  color: rgba(255,255,255,0.6);
+  letter-spacing: 0.5px;
+}
+
+/* ── Outer container ── */
+.enrl-outer {
+  max-width: 820px;
+  margin: 0 auto;
+  padding: 0 24px 80px;
+  position: relative;
+}
+
+/* ── Stepper card ── */
+.enrl-stepper-card {
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 20px 60px rgba(13,27,62,0.14);
+  padding: 28px 36px 20px;
+  margin-top: -60px;
+  position: relative;
+  z-index: 10;
+}
+
+.enrl-stepper {
+  display: flex;
+  align-items: flex-start;
+}
+
+/* Each step: column (dot + label) + connector to the right */
+.enrl-step-item-wrap {
+  display: flex;
+  align-items: flex-start;
+  flex: 1;
+}
+
+.enrl-step-item-wrap:last-child {
+  flex: 0;
+}
+
+.enrl-step-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  min-width: 80px;
+}
+
+/* Dot */
+.enrl-step-dot {
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  border-radius: 50%;
+  border: 2px solid rgba(13,27,62,0.18);
+  background: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 900;
+  color: rgba(13,27,62,0.35);
+  transition: all 0.35s cubic-bezier(0.34,1.56,0.64,1);
+  position: relative;
+  z-index: 1;
+}
+
+.enrl-step-dot.is-active {
+  background: var(--navy);
+  border-color: var(--navy);
+  color: white;
+  transform: scale(1.12);
+  animation: enrlPulse 2s ease-in-out infinite;
+}
+
+.enrl-step-dot.is-done {
+  background: #16a34a;
+  border-color: #16a34a;
+  color: white;
+}
+
+/* Connector line */
+.enrl-step-connector {
+  flex: 1;
+  height: 2px;
+  background: rgba(13,27,62,0.12);
+  margin: 0 6px;
+  margin-top: 21px; /* vertically center with 44px dot (22px - 1px = 21px) */
+  transition: background 0.4s ease;
+  border-radius: 2px;
+  min-width: 20px;
+}
+
+.enrl-step-connector.is-done {
+  background: linear-gradient(90deg, #16a34a, #22c55e);
+}
+
+/* Step labels — positioned below stepper row */
+.enrl-stepper-labels {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
+.enrl-step-label {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: rgba(13,27,62,0.35);
+  letter-spacing: 0.3px;
+  transition: color 0.3s;
+  text-align: center;
+  flex: 1;
+}
+
+.enrl-step-label.is-active {
+  color: var(--navy);
+  font-weight: 800;
+}
+
+.enrl-step-label.is-done {
+  color: #16a34a;
+}
+
+/* Progress bar */
+.enrl-progress-track {
+  height: 3px;
+  background: rgba(13,27,62,0.08);
+  border-radius: 10px;
+  margin-top: 16px;
+  overflow: hidden;
+}
+
+.enrl-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--navy), #4a7db5);
+  border-radius: 10px;
+  transition: width 0.5s cubic-bezier(0.65,0,0.35,1);
+}
+
+/* ── Form card ── */
+.enrl-card {
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 8px 40px rgba(13,27,62,0.08);
+  padding: 40px 44px 36px;
+  margin-top: 20px;
+  border: 1px solid rgba(13,27,62,0.07);
+}
+
+/* Step header inside card */
+.enrl-card-header {
+  margin-bottom: 32px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid rgba(13,27,62,0.07);
+}
+
+.enrl-card-step-badge {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: var(--red);
+  background: rgba(204,34,34,0.08);
+  border-radius: 6px;
+  padding: 4px 10px;
+  margin-bottom: 10px;
+}
+
+.enrl-card-title {
+  font-family: var(--font-playfair), serif;
+  font-size: 26px;
+  font-weight: 900;
+  color: var(--navy);
+  line-height: 1.2;
+}
+
+/* ── Section labels ── */
+.enrl-section-label {
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--navy);
+  letter-spacing: 0.2px;
+  margin-bottom: 14px;
+  margin-top: 28px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.enrl-section-label:first-child { margin-top: 0; }
+
+/* ── Step 1: Identity ── */
+.enrl-identity { display: flex; flex-direction: column; }
+
+/* Photo upload */
+.enrl-photo-wrap { margin-bottom: 28px; }
+.enrl-photo-label {
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--navy);
+  margin-bottom: 12px;
+}
+
+.enrl-photo-drop {
+  display: block;
+  position: relative;
+  width: 100%;
+  max-width: 320px;
+  margin: 0 auto;
+  cursor: pointer;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 2px dashed rgba(13,27,62,0.2);
+  transition: border-color 0.2s;
+}
+
+.enrl-photo-drop:hover { border-color: var(--navy); }
+
+.enrl-photo-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 36px 24px;
+  gap: 10px;
+  background: rgba(13,27,62,0.02);
+  min-height: 200px;
+}
+
+.enrl-photo-icon-circle {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: rgba(13,27,62,0.06);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 4px;
+}
+
+.enrl-photo-hint {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--navy);
+}
+
+.enrl-photo-hint-sub {
+  font-size: 12px;
+  color: rgba(26,21,16,0.45);
+}
+
+.enrl-photo-preview-img {
+  width: 100%;
+  height: 240px;
+  object-fit: cover;
+  display: block;
+}
+
+.enrl-photo-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(13,27,62,0.55);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: white;
+  font-size: 13px;
+  font-weight: 700;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.enrl-photo-drop:hover .enrl-photo-overlay { opacity: 1; }
+
+.enrl-file-hidden { display: none; }
+
+/* Name grid */
+.enrl-name-grid { margin-bottom: 4px; }
+
+/* Profile grid */
+.enrl-profile-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+
+.enrl-profile-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 20px 12px 18px;
+  border-radius: 14px;
+  border: 2px solid rgba(13,27,62,0.12);
+  background: white;
+  cursor: pointer;
+  transition: all 0.22s cubic-bezier(0.34,1.56,0.64,1);
+  font-family: var(--font-dm-sans), sans-serif;
+  gap: 8px;
+}
+
+.enrl-profile-card:hover {
+  border-color: var(--navy);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(13,27,62,0.1);
+}
+
+.enrl-profile-card.selected {
+  background: var(--navy);
+  border-color: var(--navy);
+  color: white;
+  transform: translateY(-3px);
+  box-shadow: 0 12px 32px rgba(13,27,62,0.25);
+}
+
+.enrl-profile-icon {
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.enrl-profile-icon svg {
+  width: 28px;
+  height: 28px;
+}
+
+.enrl-profile-name {
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--navy);
+  transition: color 0.2s;
+}
+
+.enrl-profile-card.selected .enrl-profile-name { color: white; }
+
+.enrl-profile-desc {
+  font-size: 11px;
+  color: rgba(26,21,16,0.5);
+  line-height: 1.4;
+  transition: color 0.2s;
+}
+
+.enrl-profile-card.selected .enrl-profile-desc { color: rgba(255,255,255,0.7); }
+
+/* ── Step 2: Academic ── */
+.enrl-academic { display: flex; flex-direction: column; }
+
+.enrl-grade-groups {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.enrl-grade-group { }
+
+.enrl-grade-group-label {
+  font-size: 10.5px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: rgba(13,27,62,0.4);
+  margin-bottom: 8px;
+}
+
+.enrl-grade-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.enrl-grade-pill {
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: 1.5px solid rgba(13,27,62,0.16);
+  background: white;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-light);
+  cursor: pointer;
+  transition: all 0.18s;
+  font-family: var(--font-dm-sans), sans-serif;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.enrl-grade-pill:hover {
+  border-color: var(--navy);
+  color: var(--navy);
+  background: rgba(13,27,62,0.04);
+}
+
+.enrl-grade-pill.selected {
+  background: var(--navy);
+  border-color: var(--navy);
+  color: white;
+  box-shadow: 0 4px 14px rgba(13,27,62,0.2);
+}
+
+.enrl-grade-pill-star {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--red);
+  color: white;
+  font-size: 10px;
+  font-weight: 900;
+  margin-left: 2px;
+}
+
+.enrl-grade-pill.selected .enrl-grade-pill-star {
+  background: rgba(255,255,255,0.3);
+}
+
+/* Conditional rows */
+.enrl-conditional-row {
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(13,27,62,0.07);
+  animation: enrlSlideInRight 0.3s ease both;
+}
+
+.enrl-choice-pills {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.enrl-choice-pill {
+  padding: 10px 22px;
+  border-radius: 10px;
+  border: 2px solid rgba(13,27,62,0.16);
+  background: white;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-light);
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.34,1.56,0.64,1);
+  font-family: var(--font-dm-sans), sans-serif;
+}
+
+.enrl-choice-pill:hover {
+  border-color: var(--navy);
+  color: var(--navy);
+  transform: translateY(-2px);
+}
+
+.enrl-choice-pill.selected {
+  background: var(--navy);
+  border-color: var(--navy);
+  color: white;
+  box-shadow: 0 6px 20px rgba(13,27,62,0.2);
+  transform: translateY(-2px);
+}
+
+/* ── Step 3: Review + Submit ── */
+.enrl-review { display: flex; flex-direction: column; }
+
+.enrl-summary-card {
+  background: linear-gradient(135deg, rgba(13,27,62,0.03) 0%, rgba(13,27,62,0.06) 100%);
+  border: 1px solid rgba(13,27,62,0.1);
+  border-radius: 14px;
+  padding: 20px 24px;
+  margin-bottom: 28px;
+}
+
+.enrl-summary-title {
+  font-size: 12px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: rgba(13,27,62,0.5);
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.enrl-summary-grid { display: flex; flex-direction: column; gap: 10px; }
+
+.enrl-summary-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.enrl-summary-key {
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(13,27,62,0.5);
+  flex-shrink: 0;
+}
+
+.enrl-summary-val {
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--navy);
+  text-align: right;
+}
+
+.enrl-summary-badge {
+  background: var(--navy);
+  color: white;
+  padding: 3px 12px;
+  border-radius: 20px;
+  font-size: 11px;
+}
+
+.enrl-ok { color: #16a34a !important; }
+.enrl-missing { color: #dc2626 !important; }
+
+.enrl-optional-label { margin-top: 0; }
+
+.enrl-opt-badge {
+  font-size: 10px;
+  font-weight: 700;
+  background: rgba(13,27,62,0.07);
+  color: rgba(13,27,62,0.5);
+  padding: 3px 8px;
+  border-radius: 6px;
+  letter-spacing: 0.3px;
+}
+
+/* Disclaimer */
+.enrl-disclaimer {
+  font-size: 12.5px;
+  color: rgba(26,21,16,0.45);
+  text-align: center;
+  line-height: 1.6;
+  margin-top: 20px;
+}
+
+/* Captcha skip */
+.enrl-captcha-skip {
+  margin-top: 14px;
+  padding: 10px 14px;
+  background: rgba(13,27,62,0.03);
+  border: 1px dashed rgba(13,27,62,0.15);
+  border-radius: 8px;
+  font-size: 13px;
+  color: rgba(26,21,16,0.45);
+}
+
+/* ── Error ── */
+.enrl-error-box {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-top: 20px;
+  padding: 14px 16px;
+  background: rgba(220,38,38,0.06);
+  border: 1px solid rgba(220,38,38,0.2);
+  border-radius: 10px;
+  color: #7A1111;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.5;
+  animation: enrlSlideInRight 0.3s ease;
+}
+.enrl-error-box svg { flex-shrink: 0; margin-top: 2px; }
+
+/* ── Navigation ── */
+.enrl-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid rgba(13,27,62,0.07);
+}
+
+.enrl-btn-back {
+  background: transparent;
+  border: 1.5px solid rgba(13,27,62,0.2);
+  color: var(--text-light);
+  padding: 12px 22px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: var(--font-dm-sans), sans-serif;
+}
+
+.enrl-btn-back:hover {
+  border-color: var(--navy);
+  color: var(--navy);
+  background: rgba(13,27,62,0.04);
+}
+
+.enrl-btn-next,
+.enrl-btn-submit {
+  background: linear-gradient(135deg, var(--navy) 0%, #1a2d5a 100%);
+  background-size: 200% 200%;
+  color: white;
+  border: none;
+  padding: 14px 32px;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: var(--font-dm-sans), sans-serif;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 6px 20px rgba(13,27,62,0.25);
+}
+
+.enrl-btn-next:hover,
+.enrl-btn-submit:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px rgba(13,27,62,0.35);
+}
+
+.enrl-btn-submit:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Spinner */
+.enrl-spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255,255,255,0.35);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: enrlSpin 0.7s linear infinite;
+  display: inline-block;
+}
+
+/* ── Success screen ── */
+.enrl-success {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.enrl-success-ring {
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #16a34a, #22c55e);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: enrlPop 0.55s cubic-bezier(0.34,1.56,0.64,1) both;
+  box-shadow: 0 12px 36px rgba(22,163,74,0.35);
+  margin-bottom: 20px;
+}
+
+.enrl-success-title {
+  font-family: var(--font-playfair), serif;
+  font-size: 28px;
+  font-weight: 900;
+  color: var(--navy);
+  margin-bottom: 8px;
+}
+
+.enrl-success-sub {
+  font-size: 15px;
+  color: var(--text-light);
+  margin-bottom: 28px;
+}
+
+/* ── Responsive ── */
+@media (max-width: 700px) {
+  .enrl-card { padding: 28px 20px 24px; }
+  .enrl-stepper-card { padding: 22px 20px 16px; }
+  .enrl-profile-grid { grid-template-columns: repeat(2, 1fr); }
+  .enrl-step-dot { width: 36px; height: 36px; min-width: 36px; font-size: 12px; }
+  .enrl-card-title { font-size: 22px; }
+  .enrl-hero { padding: 56px 24px 90px; }
+  .enrl-outer { padding: 0 16px 60px; }
+}
+
+@media (max-width: 480px) {
+  .enrl-profile-grid { grid-template-columns: repeat(2, 1fr); }
+  .enrl-step-connector { min-width: 16px; }
+  .enrl-step-label { font-size: 10px; }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   END ENROLMENT REDESIGN
+   ═══════════════════════════════════════════════════════════ */
+
 .enrolment-print {
   display: none;
 }

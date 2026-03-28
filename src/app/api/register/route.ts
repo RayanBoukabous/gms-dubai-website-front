@@ -94,7 +94,7 @@ export async function POST(request: Request) {
         )
       }
       const g = String(grade)
-      if (g === 'G10') {
+      if (g === 'Grade 10') {
         if (!curriculum) {
           return NextResponse.json(
             { status: 'error', message: 'Missing required field: curriculum (Grade 10)' },
@@ -102,7 +102,7 @@ export async function POST(request: Request) {
           )
         }
       }
-      if (g === 'G11' || g === 'G12') {
+      if (g === 'Grade 11' || g === 'Grade 12') {
         if (!curriculum || !stream) {
           return NextResponse.json(
             { status: 'error', message: 'Missing required fields: curriculum and stream (Grades 11–12)' },
